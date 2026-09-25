@@ -6,7 +6,7 @@ Las skills actualizan esta tabla; si la editas a mano, mantén el recuento real 
 
 | # | Spec | Estado | Depende de | RF | Marcadores | Notas |
 |---|---|---|---|---|---|---|
-| 001 | [{{nombre}}](001-{{nombre}}/spec.md) | borrador | - | 0 | 0 | |
+| 001 | [Selector de métrica en tarjetas de dashboard](001-selector-de-metrica/spec.md) | planificada | - | 27 | 0 | Aprobada el 2026-09-25; [plan](001-selector-de-metrica/plan.md) y [tareas](001-selector-de-metrica/tasks.md) (34, P1 hecho) aprobados el mismo día. Antes de implementar faltan los prerrequisitos P2..P5 |
 
-## Preguntas consolidadas para {{cliente}}
-1. 
+## Preguntas consolidadas para el propietario
+1. Ninguna abierta. La [spec 001](001-selector-de-metrica/spec.md) está planificada (2026-09-25); antes de implementar faltan los prerrequisitos P2..P5 de sus [tareas](001-selector-de-metrica/tasks.md) (WSL, ramas del fork, clave de Context7, instancia local).

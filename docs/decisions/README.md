@@ -5,5 +5,5 @@ Una decisión por archivo: `ADR-NNNN-tema.md`. Estados: `propuesta`, `aceptada`,
 
 | ADR | Tema | Estado |
 |---|---|---|
-| [0001](ADR-0001-repositorios.md) | Organización de repositorios; specs como repo hermano en el workspace | propuesta |
-| [0002](ADR-0002-stack.md) | Stack de implementación | **pendiente** |
+| [0001](ADR-0001-repositorios.md) | Organización de repositorios; specs como repo hermano del fork; ramas del fork | aceptada (2026-09-25) |
+| [0002](ADR-0002-stack.md) | Stack de implementación: heredado de Metabase, cambios solo en el frontend | aceptada (2026-09-25) |

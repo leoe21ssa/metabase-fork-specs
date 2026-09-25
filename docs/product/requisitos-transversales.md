@@ -1,33 +1,27 @@
 # Requisitos no funcionales transversales (RNF)
 
 Catálogo único. Las specs citan estos ids; no los redactan de nuevo. Cada RNF es
-verificable; el umbral se fija aquí.
+verificable; el umbral se fija aquí. Está adaptado a un fork de Metabase: la sesión, las
+contraseñas, los permisos, las copias de seguridad y la operación los resuelve el producto base y
+no se vuelven a especificar.
 
-## Acceso y sesión
-- **RNF-1** Sesión: caduca a las {{n}} horas de inactividad; la revocación surte efecto en la siguiente petición.
-- **RNF-2** Contraseñas: mínimo {{n}} caracteres; hash de propósito específico; nunca en logs ni correos.
-- **RNF-3** Toda petición autenticada se acota al propietario/organización del usuario en el servidor.
-- **RNF-4** Toda acción administrativa genera una entrada de auditoría (usuario, fecha-hora, acción, entidad, id).
-
-## Datos
-- **RNF-5** {{Tipos: importes, fechas, zona horaria.}}
-- **RNF-6** Toda cifra calculada expone su fecha o versión de referencia.
-- **RNF-7** Ningún dato personal aparece en logs, mensajes de error ni URLs.
-- **RNF-8** Existe borrado o anonimización a petición con auditoría.
+## Compatibilidad con el producto base
+- **RNF-1** Sin regresión: la suite de Metabase (unitaria y de extremo a extremo) de las áreas tocadas por una spec queda en verde; un dashboard guardado antes del cambio se ve igual después.
+- **RNF-2** Cambios aditivos: cada spec lista en su plan los archivos de Metabase que modifica; ninguno está bajo `enterprise/`; no cambian el backend, la API ni el esquema de la base de datos de aplicación salvo ADR aceptado.
+- **RNF-3** Configuración compatible: toda configuración nueva se guarda en los ajustes de visualización existentes; una versión de Metabase sin el fork ignora esas claves sin error.
+- **RNF-4** Integración de upstream: tras integrar una versión nueva de Metabase, la suite del fork queda en verde antes de desplegar.
 
 ## Interfaz
-- **RNF-9** Responsive desde {{360}} px; contenido ancho se desplaza dentro de su contenedor.
-- **RNF-10** Internacionalización: todo texto visible pasa por i18n; localización del MVP: {{es-CO}}.
-- **RNF-11** Accesibilidad: contraste AA, teclado, etiquetas.
-- **RNF-12** Navegadores: últimas dos versiones de Chrome, Edge, Safari y Firefox; móviles actuales.
+- **RNF-5** Internacionalización: todo texto visible pasa por la capa de traducción de Metabase, se escribe en inglés y tiene su traducción al español en el catálogo del fork.
+- **RNF-6** Accesibilidad: los controles nuevos se manejan con teclado, exponen su rol y estado a los lectores de pantalla y cumplen contraste AA con el tema de Metabase.
+- **RNF-7** Adaptación al espacio: un control nuevo cabe en una tarjeta de la anchura mínima de la rejilla de Metabase y en la vista móvil; si no cabe en una línea, pasa a varias o se desplaza dentro de la tarjeta, nunca desborda.
+- **RNF-8** Navegadores: los mismos que soporta Metabase (últimas dos versiones de Chrome, Edge, Safari y Firefox).
 
 ## Rendimiento
-- **RNF-13** Pantallas de consulta: < {{2}} s con {{volumen de referencia}}.
-- **RNF-14** Operaciones largas: confirmación al usuario en < {{30}} s o ejecución en segundo plano con estado visible.
-- **RNF-15** Cálculos pesados se precalculan; nunca por petición de usuario.
+- **RNF-9** Sin consultas adicionales: un cambio de estado en la interfaz (por ejemplo, elegir una métrica) no envía ninguna petición al servidor; se verifica interceptando las peticiones en el test de extremo a extremo.
+- **RNF-10** Respuesta inmediata: el cambio visible tras una pulsación se completa en menos de 300 ms en una tarjeta con seis métricas y 1.000 puntos, medido en local.
 
-## Operación
-- **RNF-16** Disponibilidad objetivo: {{99 %}} mensual.
-- **RNF-17** Copia de seguridad diaria con retención de {{30}} días; restauración probada.
-- **RNF-18** Migraciones como código, aplicadas por CI.
-- **RNF-19** Toda integración externa falla de forma visible, nunca con datos vacíos sin explicación.
+## Calidad y datos
+- **RNF-11** Calidad de código: lint, formato y comprobación de tipos del repo de Metabase en verde para todo cambio.
+- **RNF-12** Datos: tests, capturas y ejemplos usan la base de datos de ejemplo de Metabase o valores ficticios; ningún dato de clientes en repos, tests ni logs.
+- **RNF-13** Licencia: el código del fork se publica o se ofrece a quien use el servicio, conforme a AGPL; ningún uso de código de `enterprise/`.

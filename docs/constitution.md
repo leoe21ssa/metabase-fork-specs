@@ -1,58 +1,64 @@
-# Constitución - {{PROYECTO}}
+# Constitución - metabase-fork
+
+Estado: aceptada · Fecha: 2026-09-24 · Aceptada por el propietario: 2026-09-25
 
 Principios innegociables. Toda spec, plan, tarea y línea de código debe cumplirlos.
 Cada principio termina con cómo se verifica, para que `sdd-validate` pueda comprobarlo.
-Cambiar un principio requiere un ADR aceptado. Entre 6 y 12 principios; borra los que no
-apliquen y añade los propios del dominio.
+Cambiar un principio requiere un ADR aceptado. Están adaptados a un producto que es un
+**fork de un proyecto vivo** (Metabase): la mayor amenaza no es el diseño desde cero sino
+romper lo que ya funciona y perder la capacidad de absorber versiones nuevas.
 
 1. **La spec manda.** Ningún comportamiento se implementa si no está en la spec activa y
    aprobada. Si falta una decisión o un marcador `[NECESITA ACLARACIÓN]` bloquea un RF, el
    trabajo se detiene y se pregunta.
    *Se verifica:* cada tarea de `tasks.md` cita al menos un RF; cada RF tiene un test con su id.
 
-2. **Dominio sin interfaz.** La lógica de negocio vive en un paquete puro, sin dependencias
-   de HTTP, interfaz gráfica ni base de datos, y es testeable con datos en memoria. Cada
-   regla o fórmula relevante está documentada en `docs/reference/`.
-   *Se verifica:* el paquete de dominio no importa módulos de red, UI ni base de datos; sus tests corren sin servicios externos.
+2. **Cambios aditivos y acotados.** Lo nuevo vive en archivos nuevos o en ajustes de
+   visualización nuevos. Los archivos de Metabase que se modifican son solo puntos de
+   inserción, están listados en el `plan.md` de la spec y cada uno cambia lo mínimo. Nada
+   se modifica dentro de `enterprise/`, ni en el backend ni en el esquema de la base de
+   datos de aplicación salvo que una spec lo exija con un ADR aceptado.
+   *Se verifica:* `git diff upstream/master --stat` en el repo de código solo lista archivos previstos en el plan; `enterprise/` no aparece en el diff.
 
-3. **Determinismo.** Todo cálculo recibe sus entradas de forma explícita (incluida la fecha
-   o el reloj cuando importe); los mismos datos producen siempre el mismo resultado.
-   *Se verifica:* ninguna función de dominio llama al reloj ni a generadores no inyectados; los tests son reproducibles.
+3. **Sin regresión del producto base.** Un dashboard guardado antes del cambio se ve y se
+   comporta igual después. La suite de Metabase de las áreas tocadas sigue en verde.
+   *Se verifica:* tests unitarios y de extremo a extremo de dashboards y visualizaciones en verde en CI; un test comprueba que una tarjeta sin la funcionalidad activa renderiza igual que antes.
 
-4. **Datos tipados.** {{Ajusta: importes como decimal exacto con moneda; fechas de negocio como fecha de calendario; zona horaria de presentación explícita; identificadores opacos.}}
-   *Se verifica:* el esquema no usa tipos ambiguos para esos datos; hay un test de redondeo/formato solo en presentación.
+4. **Lógica de visualización pura.** Las reglas de qué serie se muestra, con qué nombre y
+   cuál es la inicial viven en funciones sin interfaz, testeables con datos en memoria.
+   Los componentes de interfaz solo las invocan.
+   *Se verifica:* el módulo de lógica no importa nada de interfaz ni del navegador; sus tests corren sin DOM.
 
-5. **{{Alcance de datos / tenencia.}}** {{Si el producto sirve a varias organizaciones o usuarios: toda entidad de negocio pertenece a exactamente un propietario y ninguna consulta cruza propietarios; el alcance se aplica en la capa de acceso a datos.}}
-   *Se verifica:* test que demuestra que un usuario de A no lee datos de B.
+5. **Convenciones de Metabase, no las nuestras.** Se usan el sistema de ajustes de
+   visualización, la biblioteca de componentes interna, el mecanismo de traducción y las
+   herramientas de lint, formato y tipos del repo. Ninguna dependencia nueva.
+   *Se verifica:* lint, formato y comprobación de tipos del repo en verde; el archivo de dependencias no cambia.
 
-6. **Permisos en el servidor.** Lo que cada rol puede ver y hacer se aplica en el servidor,
-   no en la interfaz. {{Lista los roles.}}
-   *Se verifica:* test por rol que intenta lo prohibido y recibe denegación.
+6. **Tests como puerta.** Cada RF aparece en el nombre o la descripción de al menos un
+   test automático. Una suite en rojo bloquea la integración. No se avanza a la siguiente
+   tarea con tests en rojo.
+   *Se verifica:* CI falla si algún test falla; `sdd-validate` no reporta RF sin test.
 
-7. **Operaciones idempotentes.** {{Importaciones, sincronizaciones o reintentos producen el mismo estado al repetirse y nunca destruyen historial.}}
-   *Se verifica:* test de doble ejecución sin cambios.
+7. **Idiomas e internacionalización.** Specs, documentación y mensajes al usuario en
+   español; identificadores, nombres de archivo de código y commits en inglés. Los textos
+   de interfaz se escriben en inglés a través de la capa de traducción de Metabase y
+   reciben su traducción al español en el catálogo del repo.
+   *Se verifica:* grep de cadenas de interfaz literales en los componentes nuevos devuelve vacío; cada texto nuevo tiene entrada en el catálogo español.
 
-8. **Cambios de esquema como código.** Las migraciones son archivos versionados y se aplican
-   de forma automatizada, nunca a mano.
-   *Se verifica:* existe un directorio de migraciones versionado y la integración continua las aplica.
+8. **Al día con upstream.** El fork sigue la rama principal de Metabase. Cada versión
+   mensual y cada parche de seguridad se integran con un merge (rama `chore/upstream-<versión>`)
+   y la suite debe quedar en verde antes de desplegar; los parches intermedios sin
+   corrección de seguridad pueden esperar a la siguiente versión mensual. Los commits del
+   fork citan spec y RF para que cada integración sea legible.
+   *Se verifica:* `git log upstream/master..develop` lista solo commits del fork con spec y RF en el mensaje; CI en verde en `develop` tras cada integración de upstream; ninguna versión mensual de Metabase lleva más de un mes sin integrar.
 
-9. **Tests como puerta.** Cada RF aparece en el nombre o la descripción de al menos un test
-   automático. Una suite en rojo bloquea la integración. No se avanza a la siguiente tarea
-   con tests en rojo.
-   *Se verifica:* la integración continua falla si algún test falla; `sdd-validate` no reporta RF sin test.
+9. **Licencia respetada.** El fork modifica solo código AGPL. Es de uso interno de
+   StreamSolve y no se ofrece a terceros por red, por lo que no aplica la obligación de
+   ofrecer el código modificado (AGPL, sección 13); además el repo del fork es público, así
+   que el código queda disponible en cualquier caso. Si el uso cambia, se abre un ADR. El
+   código de `enterprise/` no se usa sin licencia comercial.
+   *Se verifica:* no hay diff bajo `enterprise/`; el uso interno y la visibilidad del repo constan en el [ADR-0001](decisions/ADR-0001-repositorios.md).
 
-10. **Idiomas.** Specs, documentación y mensajes al usuario en {{idioma}}; identificadores,
-    esquema, nombres de archivo de código y commits de los repos de código en inglés. Ningún
-    texto visible al usuario se escribe literal en el código: pasa por la capa de
-    internacionalización.
-    *Se verifica:* grep de cadenas de UI literales en el código devuelve vacío.
-
-11. **Honestidad.** {{Si el producto muestra estimaciones, puntuaciones o predicciones: los avisos que explican sus límites son requisitos, no adornos.}}
-    *Se verifica:* cada pantalla afectada tiene un RF que exige el aviso y un test que lo comprueba.
-
-12. **Seguridad y datos personales.** Secretos solo en variables de entorno; sesiones
-    revocables desde el servidor; toda acción administrativa queda en un registro de
-    auditoría con quién, cuándo y sobre qué. Los datos personales nunca aparecen en logs ni
-    en repositorios; los ejemplos son ficticios. Existe un camino para borrar o anonimizar a
-    una persona a petición ({{ley aplicable}}).
-    *Se verifica:* grep de datos reales en docs, specs y código devuelve vacío; hay test de auditoría por acción administrativa; existe el borrado/anonimización con test.
+10. **Datos y secretos.** Tests, capturas y ejemplos usan la base de datos de ejemplo de
+    Metabase o datos ficticios; nunca datos de clientes. Ningún secreto en los repos.
+    *Se verifica:* grep de nombres, correos o identificadores reales en docs, specs y código devuelve vacío; `.env` está ignorado.
