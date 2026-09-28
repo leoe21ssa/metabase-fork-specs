@@ -384,9 +384,15 @@ FIN
 Arrancar (el backend primero; el frontend cuando el backend haya terminado de descargar):
 
 ```bash
-systemd-run --user --unit=mb-backend -p WorkingDirectory="$HOME/work/metabase" bash -c 'source ~/work/scripts/mb-env.sh && exec clojure -M:run > ~/work/logs/backend.log 2>&1'
-systemd-run --user --unit=mb-frontend -p WorkingDirectory="$HOME/work/metabase" bash -c 'source ~/work/scripts/mb-env.sh && exec bun run build-hot > ~/work/logs/frontend.log 2>&1'
+systemd-run --user --collect --unit=mb-backend -p WorkingDirectory="$HOME/work/metabase" -p SuccessExitStatus=143 bash -c 'source ~/work/scripts/mb-env.sh && exec clojure -M:run > ~/work/logs/backend.log 2>&1'
+systemd-run --user --collect --unit=mb-frontend -p WorkingDirectory="$HOME/work/metabase" -p SuccessExitStatus=143 bash -c 'source ~/work/scripts/mb-env.sh && exec bun run build-hot > ~/work/logs/frontend.log 2>&1'
 ```
+
+`--collect` descarta la unidad al terminar aunque acabe con error y `SuccessExitStatus=143` cuenta
+como normal la salida por señal de parada (Metabase termina con 143). Sin las dos opciones, tras
+`systemctl --user stop` el nombre queda ocupado por la unidad fallida y el siguiente `systemd-run`
+responde `Unit mb-backend.service already exists`; se libera con
+`systemctl --user reset-failed mb-backend`.
 
 Ver estado, logs y parar:
 
@@ -448,6 +454,9 @@ Esperado (máquina de referencia, 2026-09-28):
 - **El editor SQL falla y el log del backend menciona `uv`, `pip` o `sqlglot`.** Falta el paso 2g.
 - **Lanzaste el backend desde Windows con `wsl.exe` y desapareció.** Es lo esperado; usa el
   paso 5d.
+- **`Unit mb-backend.service already exists` al volver a lanzar el servicio.** La unidad anterior
+  terminó con error (o se lanzó sin `--collect`) y sigue cargada: `systemctl --user reset-failed
+  mb-backend` y repite el `systemd-run` del paso 5d.
 - **`gh auth login` o `claude auth login` no abren el navegador.** Ubuntu en WSL no tiene navegador:
   copia la dirección que imprimen y ábrela en Windows.
 - **`git push` desde Ubuntu pide usuario y contraseña.** En Windows falta el bloque de
