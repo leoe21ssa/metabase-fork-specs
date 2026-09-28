@@ -7,7 +7,7 @@ Sirve para etiquetar tareas `[H]`/`[M]` en `tasks.md`: si un recurso dice
 | Recurso | Para qué | Propietario | ¿Agente puede usarlo? | Notas |
 |---|---|---|---|---|
 | GitHub - `leoe21ssa/metabase` (fork, repo de código) | Código, pull requests, CI | Esteban | Con `gh` autenticado, sí | Crear `develop` y `main`, activar Actions y proteger ramas es `[H]`. |
-| GitHub - `leoe21ssa/sdd-template` (este repo) | Specs, ADR, pull requests | Esteban | Con `gh` autenticado, sí | Mezclar pull requests es `[H]`. |
+| GitHub - `leoe21ssa/metabase-fork-specs` (este repo; nació de la plantilla `leoe21ssa/sdd-template`) | Specs, ADR, pull requests | Esteban | Con `gh` autenticado, sí | Mezclar pull requests es `[H]`. |
 | GitHub - `metabase/metabase` (upstream) | Leer código y traer versiones nuevas (`git fetch upstream`) | Metabase, Inc. | Sí, solo lectura | Nunca se hace push. |
 | Máquina de desarrollo (Windows 11 con WSL) | Build, tests unitarios y de extremo a extremo | Esteban | Sí, una vez preparada | Instalar WSL, mise y clonar los repos fuera de OneDrive es `[H]` ([ADR-0001](../decisions/ADR-0001-repositorios.md)). |
 | Context7 (clave personal en `CONTEXT7_API_KEY`) | Documentación de la versión instalada de cada librería | Esteban | Sí, con la clave en el entorno | Nunca en el repo. |

@@ -1,6 +1,6 @@
 # ADR-0001 - Organización de repositorios; las specs como repo hermano del fork
 
-Estado: aceptada · Fecha: 2026-09-24 · Aceptada por el propietario: 2026-09-25
+Estado: aceptada · Fecha: 2026-09-24 · Aceptada por el propietario: 2026-09-25 · Enmienda 1 (repo de specs propio): 2026-09-28
 
 ## Contexto
 - El código es un fork de Metabase (`metabase/metabase`, alrededor de 1,5 millones de líneas entre
@@ -8,8 +8,10 @@ Estado: aceptada · Fecha: 2026-09-24 · Aceptada por el propietario: 2026-09-25
   (`leoe21ssa/metabase`) y `upstream` (`metabase/metabase`). Su rama por defecto es `master` y hoy
   es idéntica a upstream en el commit `fa7362a1e4` (2026-09-23). El repo es público en GitHub
   y el fork es de uso interno de StreamSolve: no se ofrece a terceros (constitución, principio 9).
-- Este repo es un clon de `leoe21ssa/sdd-template` (fork de `julian-ssa/sdd-template`) y se usa
-  directamente como repo de specs, en la rama `metabase/add-ontraport-views`. También es público.
+- Este repo nació como clon de `leoe21ssa/sdd-template` (fork de `julian-ssa/sdd-template`, marcado
+  como plantilla en GitHub) y hasta el 2026-09-28 vivió en su rama `metabase/add-ontraport-views`.
+  Desde la enmienda 1 es el repo `leoe21ssa/metabase-fork-specs`, con la historia completa de la
+  plantilla. También es público.
 - Metabase se desarrolla en Linux o macOS; en Windows el proyecto exige WSL. La carpeta actual
   del workspace está dentro de OneDrive, que sincronizaría `node_modules` y artefactos de build.
 
@@ -19,14 +21,14 @@ Estado: aceptada · Fecha: 2026-09-24 · Aceptada por el propietario: 2026-09-25
 
   ```
   15_Metabase_fork/
-  ├── sdd-template/        specs, ADRs, docs, skills (este repo; hace de metabase-fork-specs)
+  ├── metabase-fork-specs/ specs, ADRs, docs, skills (este repo)
   └── metabase/            repo de código: fork de metabase/metabase
   ```
-- `sdd-template` es la fuente de verdad del producto (constitución, specs, ADRs, docs, skills).
+- `metabase-fork-specs` es la fuente de verdad del producto (constitución, specs, ADRs, docs, skills).
   No contiene código y **no es dependencia de construcción ni de despliegue** del fork.
 - El fork lleva un `AGENTS.md` propio (creado desde [`templates/code-repo/AGENTS.md`](../../templates/code-repo/AGENTS.md))
-  que dice "las specs están en `../sdd-template`; si la carpeta no existe, clónala ahí", y enlaza
-  las skills con `.agents/skills/sdd-* -> ../../../sdd-template/.agents/skills/sdd-*` (enlaces
+  que dice "las specs están en `../metabase-fork-specs`; si la carpeta no existe, clónala ahí", y enlaza
+  las skills con `.agents/skills/sdd-* -> ../../../metabase-fork-specs/.agents/skills/sdd-*` (enlaces
   simbólicos relativos, uno por skill). Metabase ya trae sus propios archivos de contexto para
   agentes; el `AGENTS.md` del fork se añade sin borrarlos ni editarlos.
 - Trazabilidad: `plan.md` y `tasks.md` viven en este repo; cada tarea marcada anota el commit del
@@ -45,8 +47,9 @@ Estado: aceptada · Fecha: 2026-09-24 · Aceptada por el propietario: 2026-09-25
   - Versión nueva de Metabase: `master` se actualiza desde upstream y entra en `develop` por un
     pull request `chore/upstream-<versión>` con la suite en verde antes de mezclar.
   - CI en cada pull request y en cada push a `develop` y `main`.
-- Repo de specs: `main`; todo cambio por rama y pull request. La rama `metabase/add-ontraport-views`
-  es la primera y entra en `main` por pull request.
+- Repo de specs (`leoe21ssa/metabase-fork-specs`): `main`; todo cambio por rama y pull request. Su
+  `main` nace del contenido de la rama `metabase/add-ontraport-views` (enmienda 1); desde entonces
+  cada cambio entra por pull request.
 - Los dos repos son públicos, así que la protección de ramas de GitHub es gratuita y se activa:
   `develop` y `main` en el fork y `main` en el repo de specs solo aceptan cambios por pull request
   (sin push directo, ni siquiera del propietario). La convención escrita en `AGENTS.md` se mantiene
@@ -73,8 +76,21 @@ Estado: aceptada · Fecha: 2026-09-24 · Aceptada por el propietario: 2026-09-25
 - Un agente que trabaje en el fork necesita este repo clonado como hermano; el `AGENTS.md` del fork lo dice.
 - Las integraciones de upstream pueden chocar con los puntos de inserción del fork; la constitución
   (principio 2) los mantiene mínimos y listados en cada plan.
-- Renombrar la carpeta `sdd-template/` a `metabase-fork-specs/` es opcional; si se hace, se
-  actualizan el `AGENTS.md` del fork y los enlaces de las skills.
+- La carpeta local se llama `metabase-fork-specs/` (enmienda 1); el `AGENTS.md` del fork y los
+  enlaces de las skills usan ese nombre.
+
+## Enmienda 1 (2026-09-28): repo de specs propio
+- Motivo: `leoe21ssa/sdd-template` es la plantilla del propietario para varios proyectos (fork de
+  `julian-ssa/sdd-template`, marcado como plantilla en GitHub, y su README pide un repo `<nombre>-specs`
+  por proyecto). Mezclar las specs de Metabase en su `main` habría contaminado todos los proyectos
+  futuros creados desde ella.
+- Decisión: se crea `leoe21ssa/metabase-fork-specs` (público, vacío) y se empuja en él la rama
+  `metabase/add-ontraport-views` como `main`, con protección de rama solo por pull request; después
+  la rama se borra de `leoe21ssa/sdd-template`, que queda como plantilla limpia. Las carpetas locales
+  pasan a llamarse `metabase-fork-specs` (`~/work/metabase-fork-specs` en WSL y la copia de consulta
+  en Windows). El remoto `upstream` del repo de specs sigue apuntando a `julian-ssa/sdd-template`,
+  solo para traer mejoras de la plantilla.
+- Descartado: mezclar en `main` de la plantilla (lo previsto en la versión original de este ADR).
 
 ## Alternativas descartadas
 - **Specs dentro del fork (monorepo)**: cada integración de upstream arrastraría las specs, el diff

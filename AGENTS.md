@@ -32,7 +32,7 @@ y documentación. No contiene código de aplicación. El código vive en el repo
 
 ```
 ../                       15_Metabase_fork/ (carpeta local, no es repo git)
-├── sdd-template/         este repo; hace de metabase-fork-specs
+├── metabase-fork-specs/  este repo (specs, ADRs, docs, skills)
 └── metabase/             repo de código: fork de metabase/metabase (master = fa7362a1e4)
 ```
 

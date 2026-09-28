@@ -277,7 +277,7 @@ usuario (Mac), nunca en una carpeta sincronizada por OneDrive, iCloud o Dropbox
 ```bash
 mkdir -p ~/work && cd ~/work
 git clone https://github.com/leoe21ssa/metabase.git
-git clone https://github.com/leoe21ssa/sdd-template.git
+git clone https://github.com/leoe21ssa/metabase-fork-specs.git
 ```
 
 El primero pesa 1,4 GB y tarda varios minutos. Después, en cada repo, la identidad con la que
@@ -291,7 +291,7 @@ git config user.email "<id>+<tu-usuario-github>@users.noreply.github.com"
 git remote add upstream https://github.com/metabase/metabase.git
 git checkout develop
 
-cd ~/work/sdd-template
+cd ~/work/metabase-fork-specs
 git config user.name "<tu-usuario-github>"
 git config user.email "<id>+<tu-usuario-github>@users.noreply.github.com"
 git remote add upstream https://github.com/julian-ssa/sdd-template.git
@@ -413,7 +413,7 @@ Un solo bloque; pégalo entero en una terminal recién abierta:
 java -version 2>&1 | head -1; clojure --version; node --version; bun --version; gh --version | head -1; uv --version; claude --version
 bash -lc 'test -n "$CONTEXT7_API_KEY" && echo context7=definida'
 gh auth status 2>&1 | grep -E 'Logged in|not logged'
-cd ~/work/metabase && git remote -v | grep -c upstream && cd ~/work/sdd-template && git remote -v | grep -c upstream
+cd ~/work/metabase && git remote -v | grep -c upstream && cd ~/work/metabase-fork-specs && git remote -v | grep -c upstream
 curl -s localhost:3000/api/health; echo; curl -s -o /dev/null -w 'frontend=%{http_code}\n' http://127.0.0.1:8080/app/dist/app-main.hot.bundle.js
 ```
 
