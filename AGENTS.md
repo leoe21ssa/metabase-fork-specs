@@ -17,15 +17,16 @@ Este repositorio es la **fuente de verdad del producto**: constitución, specs, 
 y documentación. No contiene código de aplicación. El código vive en el repo hermano
 `../metabase` (fork de `metabase/metabase`).
 
-## Estado del proyecto (2026-09-25)
+## Estado del proyecto (2026-09-28)
 
 - Fase: **[spec 001](specs/001-selector-de-metrica/spec.md) `planificada` (2026-09-25)**: [plan](specs/001-selector-de-metrica/plan.md) y [tareas](specs/001-selector-de-metrica/tasks.md)
-  aprobados por el propietario (P1). Ninguna tarea se implementa hasta que los prerrequisitos P2..P5 de las tareas estén hechos.
+  aprobados por el propietario (P1). Prerrequisitos P1..P5 hechos el 2026-09-28 (WSL, ramas del fork, clave de Context7, instancia local); la implementación (T1..T34) empieza cuando el propietario lo indique.
 - Constitución: `aceptada` (2026-09-25) en [`docs/constitution.md`](docs/constitution.md).
 - Stack: heredado del producto base y descrito en [`docs/decisions/ADR-0002-stack.md`](docs/decisions/ADR-0002-stack.md)
   (`aceptada`, 2026-09-25). El [plan de la spec 001](specs/001-selector-de-metrica/plan.md) queda habilitado.
 - Prohibido crear `apps/`, `packages/`, `src/` o cualquier código aquí.
-- Repos, ramas y entorno de trabajo: [`docs/decisions/ADR-0001-repositorios.md`](docs/decisions/ADR-0001-repositorios.md).
+- Repos, ramas y entorno de trabajo: [`docs/decisions/ADR-0001-repositorios.md`](docs/decisions/ADR-0001-repositorios.md);
+  máquina nueva paso a paso en [`docs/sdd/entorno-desarrollo.md`](docs/sdd/entorno-desarrollo.md).
 
 ## Mapa del workspace y de los repos
 

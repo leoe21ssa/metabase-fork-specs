@@ -6,7 +6,7 @@ Las skills actualizan esta tabla; si la editas a mano, mantén el recuento real 
 
 | # | Spec | Estado | Depende de | RF | Marcadores | Notas |
 |---|---|---|---|---|---|---|
-| 001 | [Selector de métrica en tarjetas de dashboard](001-selector-de-metrica/spec.md) | planificada | - | 27 | 0 | Aprobada el 2026-09-25; [plan](001-selector-de-metrica/plan.md) y [tareas](001-selector-de-metrica/tasks.md) (34, P1 hecho) aprobados el mismo día. Antes de implementar faltan los prerrequisitos P2..P5 |
+| 001 | [Selector de métrica en tarjetas de dashboard](001-selector-de-metrica/spec.md) | planificada | - | 27 | 0 | Aprobada el 2026-09-25; [plan](001-selector-de-metrica/plan.md) y [tareas](001-selector-de-metrica/tasks.md) (34) aprobados el mismo día. Prerrequisitos P1..P5 hechos el 2026-09-28; T1..T34 empiezan cuando el propietario lo indique |
 
 ## Preguntas consolidadas para el propietario
-1. Ninguna abierta. La [spec 001](001-selector-de-metrica/spec.md) está planificada (2026-09-25); antes de implementar faltan los prerrequisitos P2..P5 de sus [tareas](001-selector-de-metrica/tasks.md) (WSL, ramas del fork, clave de Context7, instancia local).
+1. Ninguna abierta. La [spec 001](001-selector-de-metrica/spec.md) está planificada (2026-09-25) y sus [tareas](001-selector-de-metrica/tasks.md) tienen los prerrequisitos P1..P5 hechos (2026-09-28: WSL, ramas del fork, clave de Context7, instancia local). La implementación (T1..T34) empieza cuando el propietario lo indique.
