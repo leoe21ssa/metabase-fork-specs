@@ -64,6 +64,8 @@ Estado: aceptada · Fecha: 2026-09-24 · Aceptada por el propietario: 2026-09-25
   copiando carpetas. Trabajar en WSL sobre `/mnt/d/...` funciona pero es varias veces más lento
   (instalación de dependencias y build) y el vigilante de archivos de webpack no es fiable; se
   reserva como opción de emergencia.
+- Paso a paso para preparar una máquina nueva (Windows con WSL o Mac), con verificación y
+  problemas conocidos: [docs/sdd/entorno-desarrollo.md](../sdd/entorno-desarrollo.md).
 
 ## Consecuencias
 - Cada repo se construye solo; el fork no necesita credenciales para este repo.

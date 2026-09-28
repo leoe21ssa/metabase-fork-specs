@@ -17,7 +17,10 @@ Rutas relativas a la raíz del repo de código. Revisar este archivo al integrar
 - Versiones fijadas por `mise.toml` y `package.json`: JDK Temurin 25, Clojure CLI 1.12.3, Node 22,
   Bun 1.3 (npm y yarn bloqueados), TypeScript 6, React 18, Mantine 8.3, ECharts 6.1, ttag 1.7, Jest 30,
   Testing Library 16, Cypress 15.
-- Windows: solo con WSL. Instalación: `./bin/dev-install` (instala mise y las herramientas).
+- Windows: solo con WSL. Instalación paso a paso (Windows y Mac) en
+  [entorno-desarrollo.md](../sdd/entorno-desarrollo.md); no se usa `./bin/dev-install` (interactivo,
+  instala mise y una segunda copia de las herramientas). Copia de una instancia real en la local:
+  [migracion-instancia-local.md](../sdd/migracion-instancia-local.md).
 - Comandos (desde la raíz del repo de código, en WSL):
 
 ```bash
