@@ -2,7 +2,7 @@
 
 > Requiere: [ADR-0002](../../docs/decisions/ADR-0002-stack.md) (stack heredado de Metabase, `aceptada` el 2026-09-25). Cubre: RF-1..RF-27 de [`spec.md`](spec.md).
 
-Base de código: `../metabase` en el commit `fa7362a1e4` de `upstream/master`, descrito en [`docs/reference/metabase-fork.md`](../../docs/reference/metabase-fork.md). Todas las rutas de este plan son relativas a la raíz de `../metabase`. El cambio es solo de frontend: ni backend, ni `static-viz/`, ni `enterprise/`.
+Base de código: `../metabase` en el commit `2fef5f61f4` de `upstream/master` (2026-09-29; el plan se escribió sobre `fa7362a1e4` y la actualización no toca sus puntos de inserción), descrito en [`docs/reference/metabase-fork.md`](../../docs/reference/metabase-fork.md). Todas las rutas de este plan son relativas a la raíz de `../metabase`. El cambio es solo de frontend: ni backend, ni `static-viz/`, ni `enterprise/`.
 
 ## Estructura de módulos
 

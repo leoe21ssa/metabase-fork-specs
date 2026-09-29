@@ -69,8 +69,8 @@ Reglas para toda la guía:
    "Claude Code" (`anthropic.claude-code`). Las carpetas de Linux se abren desde Ubuntu con
    `code ~/work/metabase`; la primera vez instala un servidor de VS Code dentro de WSL.
 
-5. Instala Git para Windows si no lo tienes: aporta el gestor de credenciales que WSL reutiliza
-   para no volver a iniciar sesión en GitHub (paso 3a).
+5. Git para Windows es opcional: solo hace falta para usar repos desde Windows. Dentro de Ubuntu,
+   git inicia sesión en GitHub con `gh` (paso 3a).
 
 En el resto de la guía, "la terminal" es la ventana de Ubuntu.
 
@@ -210,20 +210,18 @@ sesión se inicia en el paso 3c.
 ### 3a. GitHub
 
 ```bash
-gh auth login
+gh auth login -s workflow
 ```
 
 Respuestas: `GitHub.com`; `HTTPS`; a "Authenticate Git with your GitHub credentials?" responde
-**No** en Windows (git usará el gestor de credenciales de Windows, siguiente bloque) y **Yes** en
-Mac; `Login with a web browser`. Copia el código de ocho letras, abre en tu navegador la dirección
-que imprime (Ubuntu no puede abrirlo por ti) y pega el código. Comprueba con `gh auth status`:
-debe decir `Logged in to github.com account <tu-usuario>`.
+**Yes** (git usará esta sesión de `gh` para GitHub, en Windows y en Mac); `Login with a web
+browser`. Copia el código de ocho letras, abre en tu navegador la dirección que imprime (Ubuntu no
+puede abrirlo por ti) y pega el código. Comprueba con `gh auth status`: debe decir
+`Logged in to github.com account <tu-usuario>` y, en `Token scopes`, incluir `workflow`, el permiso
+que GitHub exige para subir cambios en `.github/workflows/` (cada actualización de Metabase los trae).
 
-Solo Windows: que git dentro de Ubuntu reutilice el inicio de sesión de Git para Windows:
-
-```bash
-git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe"
-```
+En Windows no uses el gestor de credenciales de Git para Windows desde Ubuntu: con `systemd=true`
+en WSL deja de funcionar tras reiniciar el PC (`Exec format error`, visto el 2026-09-29).
 
 ### 3b. Clave de Context7
 
@@ -459,9 +457,12 @@ Esperado (máquina de referencia, 2026-09-28):
   mb-backend` y repite el `systemd-run` del paso 5d.
 - **`gh auth login` o `claude auth login` no abren el navegador.** Ubuntu en WSL no tiene navegador:
   copia la dirección que imprimen y ábrela en Windows.
-- **`git push` desde Ubuntu pide usuario y contraseña.** En Windows falta el bloque de
-  `credential.helper` del paso 3a; en Mac responde Yes a "Authenticate Git" o ejecuta
-  `gh auth setup-git`.
+- **`git push` desde Ubuntu pide usuario y contraseña** (o muestra `git-credential-manager.exe` con
+  `Exec format error`). Git no usa la sesión de `gh`: ejecuta `gh auth setup-git` y repite el push.
+  GitHub no acepta la contraseña de la cuenta para git.
+- **`refusing to allow an OAuth App to create or update workflow ... without workflow scope`.**
+  Falta el permiso `workflow`: `gh auth refresh -h github.com -s workflow`, autoriza con el código en
+  el navegador y repite el push.
 - **Avisos `LF will be replaced by CRLF`.** Solo en copias en Windows; inofensivos. Los commits
   se hacen desde Ubuntu o con `git -c core.safecrlf=false`.
 - **Docker Desktop en Windows.** Comparte la máquina virtual de WSL: la memoria de `.wslconfig` es

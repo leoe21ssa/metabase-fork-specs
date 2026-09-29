@@ -1,6 +1,8 @@
 # Metabase: mapa del producto base y del fork
 
-Fuente: `metabase/metabase` @ `fa7362a1e4` (2026-09-23); fork `leoe21ssa/metabase` idéntico en `master`.
+Fuente: `metabase/metabase` @ `2fef5f61f4` (2026-09-29); fork `leoe21ssa/metabase` idéntico en `master` y
+en `develop` (PR #1 del fork, sin impacto en los puntos de inserción de la
+[spec 001](../../specs/001-selector-de-metrica/spec.md)). Versión revisada antes: `fa7362a1e4` (2026-09-23).
 Rutas relativas a la raíz del repo de código. Revisar este archivo al integrar cada versión nueva.
 
 ## Qué es y licencia
@@ -15,8 +17,8 @@ Rutas relativas a la raíz del repo de código. Revisar este archivo al integrar
 
 ## Herramientas y comandos
 - Versiones fijadas por `mise.toml` y `package.json`: JDK Temurin 25, Clojure CLI 1.12.3, Node 22,
-  Bun 1.3 (npm y yarn bloqueados), TypeScript 6, React 18, Mantine 8.3, ECharts 6.1, ttag 1.7, Jest 30,
-  Testing Library 16, Cypress 15.
+  Bun 1.3 (npm y yarn bloqueados), TypeScript 6 (la comprobación de tipos usa el compilador nativo de
+  TypeScript 7), React 18, Mantine 8.3, ECharts 6.1, ttag 1.7, Jest 30, Testing Library 16, Cypress 15.
 - Windows: solo con WSL. Instalación paso a paso (Windows y Mac) en
   [entorno-desarrollo.md](../sdd/entorno-desarrollo.md); no se usa `./bin/dev-install` (interactivo,
   instala mise y una segunda copia de las herramientas). Copia de una instancia real en la local:
@@ -27,12 +29,16 @@ Rutas relativas a la raíz del repo de código. Revisar este archivo al integrar
 bun install                                   # dependencias
 bun run build-hot                             # frontend en modo desarrollo (recarga en caliente)
 clojure -M:run                                # backend en localhost:3000
-bun run test-unit <ruta-del-spec>             # tests unitarios (Jest); compila ClojureScript antes
+TZ=UTC bun run test-unit <ruta-del-spec>      # tests unitarios (Jest); compila ClojureScript antes (necesita java)
+TZ=UTC bun run test-unit-keep-cljs <ruta>     # igual, sin recompilar ClojureScript
 bun run lint-eslint-pure                      # ESLint
 bun run lint-format-pure                      # formato (oxfmt); `bun run format` corrige
 bun run type-check-pure                       # tipos
 CYPRESS_GUI=false bun run test-cypress --spec <archivo.cy.spec.ts>   # extremo a extremo, con backend en marcha
 ```
+- Los tests unitarios suponen la hora UTC, la de los servidores de GitHub: con otra zona horaria
+  fallan algunos de fechas (2 de `SmartScalar/compute.unit.spec.ts` con la hora de Bogotá). Medido el
+  2026-09-29 en WSL: las cuatro carpetas del plan suman 191 suites y 2148 tests (81 s); tipos, 17 s.
 - Tests de backend: `bin/test-agent :only '[namespace]'`; no se necesitan en la [spec 001](../../specs/001-selector-de-metrica/spec.md).
 - Guías del repo de código: `docs/developers-guide/devenv.md` (entorno), `docs/developers-guide/frontend.md`
   (estilo y tests unitarios), `docs/developers-guide/e2e-tests.md` (Cypress).
@@ -73,3 +79,8 @@ CYPRESS_GUI=false bun run test-cypress --spec <archivo.cy.spec.ts>   # extremo a
 - Build y suite pesados: la primera instalación tarda minutos y ocupa varios GB.
 - Cada versión de Metabase puede mover archivos (por ejemplo, los ajustes de gráficos se movieron a
   `viz-core`); los puntos de inserción del fork deben revisarse en cada integración.
+- Integrar una versión nueva de Metabase: `git fetch upstream`; `master` avanza sin commits propios y
+  se sube; rama `chore/upstream-<fecha>` con PR a `develop`, suite en verde y mezcla con **merge
+  commit** (squash o rebase copian los commits con otra identidad y la siguiente integración daría
+  conflictos en cientos de archivos). El token de `gh` necesita el permiso `workflow`, porque casi
+  todas las versiones tocan `.github/workflows/`. Primera integración: 2026-09-29, 69 commits, PR #1.
